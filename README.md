@@ -19,10 +19,10 @@ All experiments are conducted on a server with the following configurations:
 
 ## Run the code
  
-To try our code, you can use the IPython notebook `demo_standard.ipynb`, `demo_scarcelabel.ipynb` and `demo_attack.ipynb` for three different experimental scenarios.
-* Standard Experimental Scenario: `demo_standard.ipynb`
-* Label-Scarce Scenario: `demo_scarcelabel.ipynb`
-* Adversarial Attack Scenario: `demo_attack.ipynb`
+To try our code, you can use the IPython notebook `demo1_standard.ipynb`, `demo2_scarcelabel.ipynb` and `demo3_attack.ipynb` for three different experimental scenarios.
+* Standard Experimental Scenario: `demo1_standard.ipynb`
+* Label-Scarce Scenario: `demo2_scarcelabel.ipynb`
+* Adversarial Attack Scenario: `demo3_attack.ipynb`
 
 ## Datasets
 In the folder `./data`, we provide the following datasets:
