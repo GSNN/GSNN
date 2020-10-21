@@ -125,11 +125,29 @@ class GSNN(nn.Module):
                 
             return y_pred_total_total, q_dis_total, y_total, y_encode
         else:
-            prior_dis = Normal(torch.zeros(self.z_dim).cuda(), torch.ones(self.z_dim).cuda())
-            z_sample = prior_dis.rsample()
-            y_pred = self.x_to_y(x, adj, z_sample)
-            y_pred2, _ = self.x_to_yu(x, adj)
-            return y_pred, y_pred2
+            x = x.contiguous().view(-1, self.x_dim)
+            y_ = y_.contiguous().view(-1, self.y_dim)
+            y_encode, y_embedding = self.x_to_yu(x, adj)
+            y_pred_total = []
+            for i in range(40):
+                y = y_.clone()
+                y[non_label] = F.gumbel_softmax(y_encode[non_label], tau=1.0, hard=True)
+
+                # encode
+                r_nodes = self.xy_to_r(y_embedding, y, adj)
+                r_graph = self.r_aggregate(r_nodes)
+                mu, sigma = self.r_to_musigma(r_graph)
+
+                q_dis = Normal(mu, sigma)
+                for _ in range(1):
+                    z_sample = q_dis.rsample()
+                    #Decode
+                    y_pred = self.x_to_y(x, adj, z_sample)
+                    y_pred_total.append(y_pred)
+
+            y_pred = sum(y_pred_total)/len(y_pred_total)
+            
+            return y_pred, y_encode
         
 class GCN(nn.Module):
     def __init__(self, x_dim, h_dim, y_dim, as_encoder=False, normalize=True):

@@ -46,7 +46,7 @@ class GSNNTrainer():
             self.optimizer.step()
 
             if earlystopping:
-                max_acc, mean_acc, _, _ = self.evalGSNN(adj, feature, label, val_mask, sample_num=20)
+                max_acc, mean_acc, _, _ = self.evalGSNN(adj, feature, label, val_mask, 1, non_label)
                 if mean_acc >= best_mean_acc:
                     best_mean_acc = mean_acc
                     best_model_para = copy.deepcopy(self.gsnn.state_dict())
@@ -65,7 +65,7 @@ class GSNNTrainer():
         
         if earlystopping:
             self.gsnn.load_state_dict(best_model_para)   
-        max_acc, mean_acc, y_p_max, y_p_mean = self.evalGSNN(adj, feature, label, test_mask, sample_num=40)
+        max_acc, mean_acc, y_p_max, y_p_mean = self.evalGSNN(adj, feature, label, test_mask, 1, non_label)
         print("Test_mean_acc: {}".format(mean_acc))
         print('-'*50)
         return mean_acc
@@ -103,14 +103,14 @@ class GSNNTrainer():
         kl_pq = kl_pq / len(y_pred_total)
         return reconstruct_total, kl_total, q_yl, kl_pq
 
-    def evalGSNN(self, adj, feature, label, index_mask, sample_num = 40):
+    def evalGSNN(self, adj, feature, label, index_mask, sample_num, non_label):
         self.gsnn.eval()
         sample_list = []
         y_p_list = []
         total_size = len(index_mask)
         sample_total = torch.zeros_like(label, dtype=torch.float32)
         for _ in range(sample_num):
-            y_eval, y_p = self.gsnn(feature, label, adj, [])
+            y_eval, y_p = self.gsnn(feature, label, adj, non_label)
             sample_total = sample_total + y_eval
             
             y_eval_scalar = y_eval.argmax(dim = 1)
