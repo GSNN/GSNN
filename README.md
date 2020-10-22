@@ -1,6 +1,6 @@
 # Graph Stochastic Neural Networks for Semi-supervised Learning
 
-Code implementation of the paper: Graph Stochastic Neural Networks for Semi-supervised Learning, which has been accepted to NeurIPS 2020.
+Code implementation of the paper: Graph Stochastic Neural Networks for Semi-supervised Learning, which has been accepted by NeurIPS 2020.
 
 ## Requirements
 * `python 3.6.7`
